@@ -8,6 +8,7 @@ use std::path::Path;
 use std::collections::BTreeSet;
 use ndarray::prelude::*;
 use na::{DMatrix, DVector};
+use std::time::{Instant};
 
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
@@ -279,7 +280,15 @@ fn main() {
     let filepath = &args[1];
     println!("Read {}", filepath);
     let payoff_grid = read_to_grid(filepath);
+
+    let start = Instant::now();
     let pure_nash = solve_pure(&payoff_grid);
+    let duration = start.elapsed();
     println!("Pure strategy Nash {:?}", pure_nash);
+    println!("Time consumed: {:?}", duration);
+    
+    let start = Instant::now();
     solve_mixed(&payoff_grid);
+    let duration = start.elapsed();
+    println!("Time consumed: {:?}", duration);
 }
